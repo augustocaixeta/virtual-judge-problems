@@ -1,13 +1,10 @@
 #include <iostream>
-#include <map>
-#include <vector>
-#include <string>
+#include <bits/stdc++.h>
 
 using namespace std;
 
 int main() {
     int t;
-    vector<string> binders;
     cin >> t;
 
     while (t--) {
@@ -15,43 +12,58 @@ int main() {
 
         cin.ignore();
         getline(cin, title);
-        binders.push_back(title);
+        transform(title.begin(), title.end(), title.begin(), ::toupper);
 
         int m, n, b;
         cin >> m >> n >> b;
 
-        map<string, int> ingredients;
-        map<string, int> recipes;
+        map<string, int> costs;
         map<string, int> requirements;
+        vector<pair<int, string>> recipes;
 
         while (m--) {
             string name;
             int c;
 
             cin >> name >> c;
-            ingredients[name] = c;
+            costs[name] = c;
         }
 
         while (n--) {
             string recipe;
-            int total;
+            int sum = 0;
 
             cin.ignore();
-            getline(cin, title);
+            getline(cin, recipe);
 
             int k;
             cin >> k;
 
             while (k--) {
                 string name;
-                int c;
-                cin >> name >> c;
-                requirements[name] = c;
-                total += c;
+                int amount;
+                cin >> name >> amount;
+                sum += amount * costs[name];
             }
 
-            recipes[recipe] = total;
+            if (sum <= b) {
+                recipes.push_back({sum, recipe});
+            }
         }
+
+        sort(recipes.begin(), recipes.end());
+
+        cout << title << endl;
+
+        if (recipes.empty()) {
+            cout << "Too expensive!" << endl;
+        } else {
+            for (auto r : recipes) {
+                cout << r.second << endl;
+            }
+        }
+
+        cout << endl;
     }
 
     return 0;
